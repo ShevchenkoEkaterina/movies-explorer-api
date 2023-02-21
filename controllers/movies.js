@@ -5,15 +5,31 @@ const NotAutorizedError = require('../errors/not-authorized-err');
 
 const getMovies = (req, res, next) => {
   Movie.find({})
-    .populate(['owner', 'likes'])
+    .populate(['owner'])
     .then((movie) => res.status(200).send(movie))
     .catch(next);
 };
 
 const createMovie = (req, res, next) => {
   const owner = req.user._id;
-  const { name, link } = req.body;
-  return Movie.create({ name, link, owner })
+  const {
+    country, director, duration, year, description, image, trailerLink, thumbnail, movieId,
+    nameRU, nameEN,
+  } = req.body;
+  return Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+    owner,
+  })
     .then((movie) => res.status(201).send(movie))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -31,7 +47,7 @@ const deleteMovieById = (req, res, next) => {
       if (String(movie.owner) === ownerId) {
         return movie.remove();
       }
-      throw new NotAutorizedError('Невозможно удалить чужую фильм.');
+      throw new NotAutorizedError('Невозможно удалить чужой фильм.');
     })
     .then((movie) => res.status(200).send(movie))
     .catch((err) => {

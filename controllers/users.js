@@ -21,13 +21,11 @@ const createUser = (req, res, next) => {
       email: req.body.email,
       password: hash,
       name: req.body.name,
-      about: req.body.about,
-      avatar: req.body.avatar,
     }))
     .then(({
-      email, name, about, avatar, _id,
+      email, name, _id,
     }) => res.status(201).send({
-      email, name, about, avatar, _id,
+      email, name, _id,
     }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {

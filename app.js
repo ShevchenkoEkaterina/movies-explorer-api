@@ -9,7 +9,7 @@ const error = require('./middlewares/error');
 const {
   allowOrigin, allowOptions,
 } = require('./middlewares/cors');
-const NotFoundError = require('./errors/not-found-err');
+const HttpForbiddenError = require('./errors/http-forbidden-err');
 const {
   createUser, login,
 } = require('./controllers/users');
@@ -55,7 +55,7 @@ app.use(allowOptions);
 app.use(errorLogger);
 
 app.use('*', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
+  next(new HttpForbiddenError('Запрашиваемый ресурс не найден'));
 });
 app.use(errors());
 app.use(error);

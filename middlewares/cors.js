@@ -1,6 +1,5 @@
 const allowedCors = [
-  'https://she15.students.nomoredomainsclub.ru',
-  'http://she15.students.nomoredomainsclub.ru',
+  'https://api.movies.ekatshev4enko.nomoredomains.work/',
   'localhost:3000',
 ];
 

@@ -9,8 +9,9 @@ const AlreadyExistsError = require('../errors/already-exists-err');
 console.log(process.env.NODE_ENV);
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const getUsers = (req, res, next) => {
-  User.find({})
+const getOwner = (req, res, next) => {
+  const userId = req.user._id;
+  return User.findById(userId)
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
@@ -62,5 +63,5 @@ const login = (req, res, next) => {
 };
 
 module.exports = {
-  getUsers, createUser, updateInformationUser, login,
+  getOwner, createUser, updateInformationUser, login,
 };

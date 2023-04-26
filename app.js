@@ -20,12 +20,16 @@ const app = express();
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 
+mongoose.set('strictQuery', false);
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
 });
+app.use(allowOrigin);
+app.use(allowOptions);
 
 app.use(requestLogger);
 
@@ -46,11 +50,9 @@ app.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
+
 app.use('/users', usersRouter);
 app.use('/movies', moviesRouter);
-
-app.use(allowOrigin);
-app.use(allowOptions);
 
 app.use(errorLogger);
 

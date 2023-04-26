@@ -1,6 +1,6 @@
 const allowedCors = [
   'https://api.movies.ekatshev4enko.nomoredomains.work/',
-  'localhost:3000',
+  'http://localhost:3000/',
 ];
 
 const allowOrigin = (req, res, next) => {

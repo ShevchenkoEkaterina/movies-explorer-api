@@ -1,7 +1,7 @@
 const usersRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
-  updateInformationUser, getOwner,
+ updateInformationUser, getOwner,
 } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 

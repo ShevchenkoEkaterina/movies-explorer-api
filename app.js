@@ -25,6 +25,8 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+app.use(allowOrigin);
+app.use(allowOptions);
 
 app.use(requestLogger);
 

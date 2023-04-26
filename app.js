@@ -6,9 +6,6 @@ const rateLimit = require('express-rate-limit');
 const usersRouter = require('./routes/users');
 const moviesRouter = require('./routes/movies');
 const error = require('./middlewares/error');
-const {
-  allowOrigin, allowOptions,
-} = require('./middlewares/cors');
 const HttpForbiddenError = require('./errors/http-forbidden-err');
 const {
   createUser, login,
@@ -28,8 +25,6 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use(allowOrigin);
-app.use(allowOptions);
 
 app.use(requestLogger);
 

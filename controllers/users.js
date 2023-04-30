@@ -6,7 +6,7 @@ const User = require('../models/user');
 const SomethingWrongError = require('../errors/not-found-err');
 const AlreadyExistsError = require('../errors/already-exists-err');
 
-const { JWT_SECRET = 'dev-secret-key', NODE_ENV } = process.env;
+const { JWT_SECRET = 'dev-secret-key' } = process.env;
 
 const getOwner = (req, res, next) => {
   const userId = req.user._id;
@@ -55,7 +55,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.status(200).send({ token });
     })
     .catch(next);

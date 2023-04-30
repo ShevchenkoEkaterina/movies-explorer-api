@@ -1,13 +1,8 @@
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const SomethingWrongError = require('../errors/not-found-err');
 const AlreadyExistsError = require('../errors/already-exists-err');
-
-console.log(process.env.NODE_ENV);
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getOwner = (req, res, next) => {
   const userId = req.user._id;
@@ -52,16 +47,6 @@ const updateInformationUser = (req, res, next) => {
     });
 };
 
-const login = (req, res, next) => {
-  const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, { expiresIn: '7d' }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
-      res.status(200).send({ token });
-    })
-    .catch(next);
-};
-
 module.exports = {
-  getOwner, createUser, updateInformationUser, login,
+  getOwner, createUser, updateInformationUser,
 };

@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../jwt.env' });
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');

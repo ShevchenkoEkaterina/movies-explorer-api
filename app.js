@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './jwt.env' });
 const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');

@@ -15,9 +15,7 @@ const {
 } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
-
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV, JWT_SECRET } = process.env;
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb');

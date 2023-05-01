@@ -1,13 +1,15 @@
-require('dotenv').config({ path: './jwt.env' });
+require('dotenv').config({ path: './.env' });
 const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+const limiter = require('./utils/limiter');
+const mongodb = require('./utils/mongodb');
 const usersRouter = require('./routes/users');
 const moviesRouter = require('./routes/movies');
 const error = require('./middlewares/error');
-const HttpForbiddenError = require('./errors/http-forbidden-err');
+const auth = require('./middlewares/auth');
+const NotFoundError = require('./errors/not-found-err');
 const {
   createUser, login,
 } = require('./controllers/users');
@@ -16,16 +18,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
-
+mongoose.connect(mongodb);
 mongoose.set('strictQuery', false);
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 
 app.use(requestLogger);
 
@@ -51,11 +45,11 @@ app.post('/signin', celebrate({
 app.use('/users', usersRouter);
 app.use('/movies', moviesRouter);
 
-app.use(errorLogger);
-
-app.use('*', (req, res, next) => {
-  next(new HttpForbiddenError('Запрашиваемый ресурс не найден'));
+app.use('*', auth, (req, res, next) => {
+  next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
+
+app.use(errorLogger);
 app.use(errors());
 app.use(error);
 

@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const InvalidDataError = require('../errors/invalid-data-err');
 const AlreadyExistsError = require('../errors/already-exists-err');
+const AlreadyExistsErrorMessage = require('../utils/already-exists-err-message');
+const InvalidDataErrorMessage = require('../utils/invalid-data-err-message');
 
 const { JWT_SECRET = 'dev-secret-key', NODE_ENV } = process.env;
 
@@ -12,9 +14,9 @@ const getOwner = (req, res, next) => {
   const userId = req.user._id;
   return User.findById(userId)
     .then(({
-      name, email, _id,
+      name, email,
     }) => res.status(200).send({
-      name, email, _id,
+      name, email,
     }))
     .catch(next);
 };
@@ -33,10 +35,10 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return next(new InvalidDataError('Переданы некорректные данные при создании пользователя.'));
+        return next(new InvalidDataError(InvalidDataErrorMessage));
       }
       if (err.code === 11000) {
-        return next(new AlreadyExistsError('Такой email уже существует.'));
+        return next(new AlreadyExistsError(AlreadyExistsErrorMessage));
       }
       return next(err);
     });
@@ -49,7 +51,10 @@ const updateInfoUser = (req, res, next) => {
     .then(() => res.status(200).send({ name, email }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return next(new InvalidDataError('Переданы некорректные данные при обновлении профиля.'));
+        return next(new InvalidDataError(InvalidDataErrorMessage));
+      }
+      if (err.code === 11000) {
+        return next(new AlreadyExistsError(AlreadyExistsErrorMessage));
       }
       return next(err);
     });
